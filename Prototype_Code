@@ -1,0 +1,71 @@
+int trigpin = 7;
+int echoPin = 8;
+int LED = 9;
+int A1A = 2;
+int A1B = 3;
+int B1A = 4;
+int B1B = 6;
+void setup() {
+  // put your setup code here, to run once:
+Serial.begin(9600);  
+pinMode(trigpin, OUTPUT);
+pinMode(echoPin, INPUT);
+pinMode(LED, OUTPUT);
+digitalWrite(LED, LOW);
+pinMode(A1A, OUTPUT);
+pinMode(A1B, OUTPUT);
+pinMode(B1A, OUTPUT);
+pinMode(B1B, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+long duration, inches, cm;
+
+
+digitalWrite(trigpin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigpin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigpin, LOW);
+
+
+
+duration = pulseIn(echoPin, HIGH);
+
+inches = microsecondsToInches(duration);
+cm = microsecondsToCentimeters(duration);
+
+
+Serial.print(inches);
+Serial.print("in, ");
+Serial.print(cm);
+Serial.print("cm");
+Serial.println();
+if(cm < 30){
+  digitalWrite(2,HIGH);
+  analogWrite(3, 0);
+  digitalWrite(4,LOW);
+  analogWrite(6,120);
+} else{
+  digitalWrite(2,LOW);
+  digitalWrite(3, 0);
+  digitalWrite(4,0);
+  analogWrite(6,0);
+}
+if (cm < 30) {
+    digitalWrite(LED, HIGH); // Turn on LED if distance is less than 30 cm
+  } else {
+    digitalWrite(LED, LOW); // Turn off LED if distance is 30 cm or more
+  }
+  
+Serial.println();
+delay(10);
+
+}
+long microsecondsToInches(long microseconds){
+  return microseconds / 74 / 2;
+}
+long microsecondsToCentimeters(long microseconds){
+  return microseconds / 29 / 2;
+}
